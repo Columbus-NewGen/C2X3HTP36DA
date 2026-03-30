@@ -95,18 +95,7 @@ export default function Footer() {
               © {thaiYear} <span className="text-zinc-900">GymMate Project</span>. Developed with <motion.span animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} className="inline-block text-rose-500 mx-1">❤️</motion.span> by CPE Students.
             </p>
             <p className="text-zinc-400 text-xs italic mt-2 max-w-sm">
-              there is a place
-              where nothing renders
-              but everything remains
-
-              a history untouched by eyes
-              a structure without form
-              a voice that never speaks in plain text
-
-              you won't see it
-              until you stop looking at the page
-
-              and start looking behind it
+              there is a place where nothing renders but everything remains a history untouched by eyes a structure without form a voice that never speaks in plain text you won't see it until you stop looking at the page and start looking behind it
             </p>
           </div>
 
