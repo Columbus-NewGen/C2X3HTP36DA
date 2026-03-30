@@ -7,5 +7,3 @@ services:
       - 4000:4000
       - 8080:8080
       - 5432:5432
-    environment:
-      - JWT_SECRET=m8V1dXlKc2ZLQ0xVZ3ZsRk9xV0h1bG5JQ1pYdG5yRk5UeW1aQ3Zpb1Z5b0pS
