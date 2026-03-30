@@ -1,0 +1,69 @@
+name: ${PROJECT_NAME:-gm-server}
+
+services:
+  postgres:
+    image: postgres:18.2-alpine
+    container_name: ${PROJECT_NAME:-gm-server}-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-gymmate}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gymmate}
+      PROJECT_NAME: ${PROJECT_NAME:-gm-server}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init.sh:/docker-entrypoint-initdb.d/init.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-gymmate}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: build/Dockerfile
+      args:
+        BACKEND_PORT: ${BACKEND_PORT:-8080}
+    image: ${PROJECT_NAME:-gm-server}-backend:${TAG:-local}
+    container_name: ${PROJECT_NAME:-gm-server}-backend
+    environment:
+      RUNNING_MODE: container
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${POSTGRES_USER:-gymmate}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-gymmate}
+      DATABASE_NAME: ${PROJECT_NAME:-gm-server}-postgres-dev
+      DATABASE_SSLMODE: ${DATABASE_SSLMODE:-disable}
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+      REGISTER_SECRET: ${REGISTER_SECRET:-local-register-secret}
+      CRON_SECRET: ${CRON_SECRET:-local-cron-secret}
+      MINIO_DISABLED: "true"
+      BACKEND_PORT: ${BACKEND_PORT:-8080}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-8080}:${BACKEND_PORT:-8080}"
+    volumes:
+      - ./configs:/app/configs
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:${BACKEND_PORT:-8080}/healthz",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  pgdata:
+    name: ${PROJECT_NAME:-gm-server}-pgdata

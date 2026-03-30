@@ -1,0 +1,12 @@
+BEGIN;
+
+ALTER TABLE users
+    DROP COLUMN IF EXISTS date_of_birth,
+    DROP COLUMN IF EXISTS gender,
+    DROP COLUMN IF EXISTS height_cm,
+    DROP COLUMN IF EXISTS fitness_level,
+    DROP COLUMN IF EXISTS fitness_goal,
+    DROP COLUMN IF EXISTS phone,
+    DROP COLUMN IF EXISTS bio;
+
+COMMIT;

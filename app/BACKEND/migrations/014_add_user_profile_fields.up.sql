@@ -1,0 +1,12 @@
+BEGIN;
+
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS date_of_birth DATE,
+    ADD COLUMN IF NOT EXISTS gender        VARCHAR(10),
+    ADD COLUMN IF NOT EXISTS height_cm     INT,
+    ADD COLUMN IF NOT EXISTS fitness_level VARCHAR(20),
+    ADD COLUMN IF NOT EXISTS fitness_goal  VARCHAR(20),
+    ADD COLUMN IF NOT EXISTS phone         VARCHAR(20),
+    ADD COLUMN IF NOT EXISTS bio           TEXT;
+
+COMMIT;
